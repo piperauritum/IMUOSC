@@ -51,10 +51,10 @@ char *pc_addr[] = { "192.168.0.1", "192.168.10.100" }; // Static IP of your PC
 - Upload it to M5StickC Plus
 
 ## Setup SuperCollider
-- Place IMU-utils.sc into Platform.userExtensionDir or Platform.systemExtensionDir
+- Place [IMU-utils.sc](https://github.com/piperauritum/IMUOSC/blob/main/SuperCollider/IMU-utils.sc) into Platform.userExtensionDir or Platform.systemExtensionDir
 
 ## Receive the data with SuperCollider
-- See plotter_test.scd
+- See [plotter_test.scd](https://github.com/piperauritum/IMUOSC/blob/main/SuperCollider/plotter_test.scd)
 
 ## Operate the M5StickC Plus
 - Press button A to display screen for 5 seconds.
