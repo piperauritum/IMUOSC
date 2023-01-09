@@ -23,7 +23,6 @@ IPAddress gateway(192, 168, 10, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 // IMU data
-float acc[3];
 float gyro[3];
 float ahrs[3];
 
@@ -135,7 +134,7 @@ void loop()
 
   // Obtain IMU data
   M5.IMU.getGyroData(&gyro[0], &gyro[1], &gyro[2]);
-  M5.IMU.getAccelData(&acc[0], &acc[1], &acc[2]);
+  M5.IMU.getAccelData(&accl[0], &accl[1], &accl[2]);
   // M5.IMU.getAhrsData(&ahrs[0], &ahrs[1], &ahrs[2]); // pitch, roll, yaw
 
   // Prevent yaw drifting (But not very effective)
@@ -156,10 +155,11 @@ void loop()
     // Correct gyroZ using the average
     gyro[2] -= adjustGyroZ;
 
-    MahonyAHRSupdateIMU(gyro[0] * DEG_TO_RAD, gyro[1] * DEG_TO_RAD, gyro[2] * DEG_TO_RAD, acc[0], acc[1], acc[2], &ahrs[0], &ahrs[1], &ahrs[2]);
+    MahonyAHRSupdateIMU(gyro[0] * DEG_TO_RAD, gyro[1] * DEG_TO_RAD, gyro[2] * DEG_TO_RAD, accl[0], accl[1], accl[2], &ahrs[0], &ahrs[1], &ahrs[2]);
   }
 
-  OscWiFi.send(pc_addr[ipx], pc_port, "/senddata", M5ID, ahrs[0], ahrs[1], ahrs[2]);
+  OscWiFi.send(pc_addr[ipx], pc_port, "/ahrsdata", M5ID, ahrs[0], ahrs[1], ahrs[2]);
+  OscWiFi.send(pc_addr[ipx], pc_port, "/accldata", M5ID, accl[0], accl[1], accl[2]);
 
   delay(50);
 }

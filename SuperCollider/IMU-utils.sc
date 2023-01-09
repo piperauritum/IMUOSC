@@ -42,18 +42,17 @@ IMUReceiver {
 		recvData = OSCFunc({|msg, time|
 			var id = msg[1] * 3;
 			var val = msg[2..4];
-			var v;
 			val.do{|e,i|
 				switch(i,
-					0, { v = e.linlin(-90, 90, 0, 1)},
-					1, { v = e.linlin(-180, 180, 0, 1)},
-					2, { v = e.linlin(-189, 170, 0, 1)},
+					0, { e = e.linlin(-90, 90, 0, 1)},
+					1, { e = e.linlin(-180, 180, 0, 1)},
+					2, { e = e.linlin(-189, 170, 0, 1)},
 				);
-				Server.default.sendMsg(\c_set, id + i, v);
-				imuVal[id + i] = v;
+				Server.default.sendMsg(\c_set, id + i, e);
+				imuVal[id + i] = e;
 			};
 			if(showMsg){ msg.postln };
-		}, '/senddata');
+		}, '/ahrsdata');
 
 
 		// Plot the IMU values
@@ -70,8 +69,8 @@ IMUReceiver {
 
 					defer{
 						graph[i].value = aryVal.rowAt(i);
-						graph[i].minval = 0;
-						graph[i].maxval = 1;
+						// graph[i].minval = 0;
+						// graph[i].maxval = 1;
 					};
 				};
 			};
