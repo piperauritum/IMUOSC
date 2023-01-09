@@ -1,2 +1,5 @@
 
 _wifi.txt
+Arduino/main/debug.cfg
+Arduino/main/debug_custom.json
+Arduino/main/esp32.svd
