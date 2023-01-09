@@ -23,6 +23,7 @@ IPAddress gateway(192, 168, 10, 1);
 IPAddress subnet(255, 255, 255, 0);
 
 // IMU data
+float accl[3];
 float gyro[3];
 float ahrs[3];
 
