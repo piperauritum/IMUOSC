@@ -46,7 +46,7 @@ const char pass[] = "PIN";  // PIN of your access point - router
 ```
 - Set these parameters to match your PC's IP address
 ```
-char *pc_addr[] = { "192.168.0.1", "192.168.10.100" }; // Static IP of your PC
+char *pc_addr[] = { "192.168.10.100", "192.168.10.101" }; // Static IP of your PC
 ```
 ```
 IPAddress ip(192, 168, 10, 120 + M5ID); // The first three numbers are the same as IP of your PC

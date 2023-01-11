@@ -13,7 +13,7 @@ const char ssid[] = "SSID"; // SSID of your access point - router
 const char pass[] = "PIN";  // PIN of your access point - router
 
 // SuperCollider
-char *pc_addr[] = { "192.168.0.1", "192.168.10.100" }; // Static IP of your PC
+char *pc_addr[] = { "192.168.10.100", "192.168.10.101" }; // Static IP of your PC
 const int pc_port = 57120;
 int ipx = 0;
 
