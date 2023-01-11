@@ -18,9 +18,9 @@ const int pc_port = 57120;
 int ipx = 0;
 
 // Static IP of M5Stick
-IPAddress ip(192, 168, 10, 120 + M5ID);
-IPAddress gateway(192, 168, 10, 1);
-IPAddress subnet(255, 255, 255, 0);
+IPAddress ip(192, 168, 10, 120 + M5ID); // The first three numbers are the same as IP of your PC
+IPAddress gateway(192, 168, 10, 1);     // Default gateway of your PC
+IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
 
 // IMU data
 float accl[3];
