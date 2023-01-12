@@ -44,9 +44,9 @@ IMUReceiver {
 			var val = msg[2..4];
 			val.do{|e,i|
 				switch(i,
-					0, { e = e.linlin(-90, 90, 0, 1)},
+					0, { e = e.linlin(-86, 86, 0, 1)},
 					1, { e = e.linlin(-180, 180, 0, 1)},
-					2, { e = e.linlin(-189, 170, 0, 1)},
+					2, { e = e.linlin(-189, 172, 0, 1)},
 				);
 				Server.default.sendMsg(\c_set, id + i, e);
 				imuVal[id + i] = e;
@@ -69,8 +69,8 @@ IMUReceiver {
 
 					defer{
 						graph[i].value = aryVal.rowAt(i);
-						// graph[i].minval = 0;
-						// graph[i].maxval = 1;
+						graph[i].minval = 0;
+						graph[i].maxval = 1;
 					};
 				};
 			};

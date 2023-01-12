@@ -77,7 +77,6 @@ void setup()
   M5.Lcd.setCursor(0, 32);
   M5.Lcd.printf("BATT %3.1f", battery());
   M5.Lcd.print("% ");
-  lcd_off = millis() + 5000;
   batt_chk = millis() + 10000;
   batt_thr = battery() - 10;
 

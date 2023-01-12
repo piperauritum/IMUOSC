@@ -62,7 +62,6 @@ IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
 - See [plotter_test.scd](https://github.com/piperauritum/IMUOSC/blob/main/SuperCollider/plotter_test.scd)
 
 ## Operate the M5StickC Plus
-- Press button A to display screen for 5 seconds.
+- Press button A to display screen for 3 seconds.
 - Press button B to switch pc_addr.
-- Press power button for 2 seconds to power on.
-- Press power button for 6 seconds to power off.
+- Press power switch for approx. 1 second to power on/off.
