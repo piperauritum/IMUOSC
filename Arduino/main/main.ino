@@ -77,10 +77,12 @@ void setup()
   M5.Lcd.setCursor(0, 32);
   M5.Lcd.printf("BATT %3.1f", battery());
   M5.Lcd.print("% ");
+  lcd_off = millis() + 3000;
   batt_chk = millis() + 10000;
   batt_thr = battery() - 10;
 
   M5.IMU.Init();
+  // M5.IMU.SetAccelFsr(M5.IMU.AFS_4G);
 }
 
 void loop()
@@ -94,10 +96,10 @@ void loop()
     M5.Axp.SetLDO2(false);
   }
 
-  // Press A to display screen for 5 seconds
+  // Press A to display screen for 3 seconds
   if (M5.BtnA.isPressed())
   {
-    lcd_off = millis() + 5000;
+    lcd_off = millis() + 3000;
     M5.Axp.ScreenBreath(15);
     M5.Axp.SetLDO2(true);
     M5.Lcd.setCursor(0, 32);
@@ -110,6 +112,12 @@ void loop()
   if (M5.BtnB.wasPressed())
   {
     ipx = (ipx + 1) % 2;
+  }
+
+  // Long press (1s) power switch to power off
+  if (M5.Axp.GetBtnPress() == 0x01)
+  {
+    M5.Axp.PowerOff();
   }
 
   // Check battery level every 10 seconds
