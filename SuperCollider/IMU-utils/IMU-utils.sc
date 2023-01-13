@@ -12,7 +12,7 @@ IMUReceiver {
 	*/
 
 	var numSensors, bus, >showMsg, view, graph, aryVal, imuVal;
-	var getAhrsData, getAcclData, plotVal;
+	var getAhrsData, getAcclData, plotVal, lowBatt;
 
 	*new { | numSensors = 1, bus = 0, showMsg = false |
 		if(Server.default.serverRunning.not) { Error("IMUReceiver - Server not running.").throw };
@@ -63,6 +63,21 @@ IMUReceiver {
 			if(showMsg){ msg.postln };
 		}, '/accldata');
 
+		lowBatt =  OSCFunc({|msg, time|
+			var bd, wd, tx;
+			var id = msg[1];
+			defer {
+				bd = Window.availableBounds;
+				wd = Window.new("Low Battery", Rect(bd.width/2-200, bd.height/2-50, 400, 100));
+				tx = StaticText(wd, Rect(0, 0, 400, 100));
+				tx.align = \center;
+				tx.font = Font("Arial", 16, true);
+				tx.string = "Sensor" + id.asString + "is low battery.";
+				wd.alwaysOnTop = true;
+				wd.front;
+			};
+		}, '/low_batt');
+
 
 		// Plot the IMU values
 		plotVal = Routine({
@@ -89,6 +104,7 @@ IMUReceiver {
 	stop {
 		getAhrsData.free;
 		getAcclData.free;
+		lowBatt.free;
 		plotVal.stop;
 		view.close;
 	}
