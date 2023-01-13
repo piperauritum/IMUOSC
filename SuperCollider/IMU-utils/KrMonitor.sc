@@ -3,7 +3,7 @@ KrMonitor {
 	var plotVal, trig;
 
 	*new { | bus = 0, numChannels = 4 |
-		if(Server.default.serverRunning.not) { Error("KrMonitor - Server not running.").throw };
+		if (Server.default.serverRunning.not) { Error("KrMonitor - Server not running.").throw };
 		^super.newCopyArgs(bus, numChannels).init;
 	}
 
@@ -33,9 +33,9 @@ KrMonitor {
 	start {
 		plotVal = OSCFunc({|msg|
 			msg.do{|e,i|
-				if(i > 2, {
+				if (i > 2) {
 					defer { mtr[i-3].value = e };
-				});
+				};
 			}
 		}, '/cbmon');
 
@@ -49,10 +49,10 @@ KrMonitor {
 
 	stop {
 		plotVal.free;
-		if(trigOn, {
+		if (trigOn) {
 			trig.free;
 			trigOn = false;
-		});
+		};
 		view.close;
 	}
 }

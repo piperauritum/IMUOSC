@@ -15,7 +15,7 @@ IMUReceiver {
 	var getAhrsData, getAcclData, plotVal, lowBatt;
 
 	*new { | numSensors = 1, bus = 0, showMsg = false |
-		if(Server.default.serverRunning.not) { Error("IMUReceiver - Server not running.").throw };
+		if (Server.default.serverRunning.not) { Error("IMUReceiver - Server not running.").throw };
 		^super.newCopyArgs(numSensors, bus, showMsg).init;
 	}
 
@@ -49,9 +49,9 @@ IMUReceiver {
 				);
 				Server.default.sendMsg(\c_set, id * 6 + i + bus, e);
 				j = id * 3 + i;
-				if(j < imuVal.size, { imuVal[j] = e });
+				if (j < imuVal.size) { imuVal[j] = e };
 			};
-			if(showMsg){ msg.postln };
+			if (showMsg) { msg.postln };
 		}, '/ahrsdata');
 
 		getAcclData = OSCFunc({|msg, time|
@@ -60,7 +60,7 @@ IMUReceiver {
 			val.do{|e,i|
 				Server.default.sendMsg(\c_set, id * 6 + i + 3 + bus, e);
 			};
-			if(showMsg){ msg.postln };
+			if (showMsg) { msg.postln };
 		}, '/accldata');
 
 		lowBatt =  OSCFunc({|msg, time|
@@ -110,11 +110,18 @@ IMUReceiver {
 	}
 }
 
+MixABS {
+	*kr {|ary|
+		^Mix.krFill(ary.size, {|n| ary[n].abs})
+	}
+}
 
-IMUAccelMix {
+MixHPZ {
 	*ar {|in|
-		var num = in.size;	// TODO: if in is not array
-		var accl = Mix.fill(num, {|n|
+		var accl, num;
+		if (in.isArray == false) { in = [in] };
+		num = in.size;
+		accl = Mix.fill(num, {|n|
 			var out = in[n];
 			out = sin(out * 2pi);
 			out = HPZ1.kr(out).abs;
