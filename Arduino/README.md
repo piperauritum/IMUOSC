@@ -63,7 +63,7 @@ IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
 - Place '[SuperCollider](https://github.com/piperauritum/IMUOSC/tree/main/SuperCollider)/IMU-utils' folder into Platform.userExtensionDir or Platform.systemExtensionDir
 
 ## Receive the data with SuperCollider
-- See 'plotter_test.scd'
+- See '[plotter_test.scd](https://github.com/piperauritum/IMUOSC/blob/main/SuperCollider/plotter_test.scd)'
 
 ## Operate the M5StickC Plus
 - Press button A to display screen for 3 seconds.
