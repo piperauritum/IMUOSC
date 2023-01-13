@@ -38,7 +38,7 @@ https://github.com/hideakitai/ArduinoOSC
 - Sketch > Include Library > Add .ZIP Library... > Select ZIP
 
 ## Upload sketch
-- Open IMUOSC/Arduino/main/main.ino
+- Open 'IMUOSC/Arduino/main/main.ino'
 - Change M5ID value (= sensor ID)
 ```
 #define M5ID 0  // Set the sensor ID
@@ -60,7 +60,7 @@ IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
 - Upload it to M5StickC Plus
 
 ## Setup SuperCollider
-- Place 'IMU-utils' folder into Platform.userExtensionDir or Platform.systemExtensionDir
+- Place 'SuperCollider/IMU-utils' folder into Platform.userExtensionDir or Platform.systemExtensionDir
 
 ## Receive the data with SuperCollider
 - See 'plotter_test.scd'
