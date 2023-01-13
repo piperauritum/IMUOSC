@@ -6,31 +6,29 @@ Platform.systemExtensionDir
 
 IMUReceiver {
 	/*
-	a = IMUReceiver(2);		// start with 2 sensors
-	a.showMsg = true;		// show OSC messages
-	a.stop;					// stop the receiver
+	a = IMUReceiver(2, 10);		// Start with 2 sensors, write to 6 busses per sensor from bus number 10
+	a.showMsg = true;			// Show OSC messages
+	a.stop;						// Stop the receiver
 	*/
 
-	var <>numSensor, <>showMsg, view, graph, aryVal, imuVal;
-	var recvData, plotVal;
+	var numSensors, bus, >showMsg, view, graph, aryVal, imuVal;
+	var getAhrsData, getAcclData, plotVal;
 
-	*new { | numSensor = 1, showMsg = false |
+	*new { | numSensors = 1, bus = 0, showMsg = false |
 		if(Server.default.serverRunning.not) { Error("IMUReceiver - Server not running.").throw };
-		^super.newCopyArgs(numSensor, showMsg).init;
+		^super.newCopyArgs(numSensors, bus, showMsg).init;
 	}
 
 	init {
-		view = Window.new("M5StickC-Plus IMU", Rect(100, 100, 600, 600));
-		view.alwaysOnTop = true;
-		view.onClose = {
-			this.stop;
-		};
+		view = Window.new("IMUReceiver", Rect(100, 100, 600, 600));
 		view.front;
+		view.onClose = { this.stop };
+		// view.alwaysOnTop = true;
 
-		imuVal = Array.fill(3 * numSensor, { 0 });
-		aryVal = Array2D(3 * numSensor, 100);
-		graph = Array.fill(3 * numSensor, {|n|
-			var w = 600 / (3 * numSensor);
+		imuVal = Array.fill(3 * numSensors, { 0 });
+		aryVal = Array2D(3 * numSensors, 100);
+		graph = Array.fill(3 * numSensors, {|n|
+			var w = 600 / (3 * numSensors);
 			Plotter("", Rect(0, w * n, 600, w - 2), view);
 		});
 
@@ -39,20 +37,31 @@ IMUReceiver {
 
 	start {
 		// Get and map IMU values, send to busses
-		recvData = OSCFunc({|msg, time|
-			var id = msg[1] * 3;
+		getAhrsData = OSCFunc({|msg, time|
+			var id = msg[1];
 			var val = msg[2..4];
+			var j;
 			val.do{|e,i|
 				switch(i,
 					0, { e = e.linlin(-86, 86, 0, 1)},
 					1, { e = e.linlin(-180, 180, 0, 1)},
 					2, { e = e.linlin(-189, 172, 0, 1)},
 				);
-				Server.default.sendMsg(\c_set, id + i, e);
-				imuVal[id + i] = e;
+				Server.default.sendMsg(\c_set, id * 6 + i + bus, e);
+				j = id * 3 + i;
+				if(j < imuVal.size, { imuVal[j] = e });
 			};
 			if(showMsg){ msg.postln };
 		}, '/ahrsdata');
+
+		getAcclData = OSCFunc({|msg, time|
+			var id = msg[1];
+			var val = msg[2..4];
+			val.do{|e,i|
+				Server.default.sendMsg(\c_set, id * 6 + i + 3 + bus, e);
+			};
+			if(showMsg){ msg.postln };
+		}, '/accldata');
 
 
 		// Plot the IMU values
@@ -78,7 +87,8 @@ IMUReceiver {
 	}
 
 	stop {
-		recvData.free;
+		getAhrsData.free;
+		getAcclData.free;
 		plotVal.stop;
 		view.close;
 	}
@@ -87,7 +97,8 @@ IMUReceiver {
 
 IMUAccelMix {
 	*ar {|in|
-		var accl = Mix.fill(3, {|n|
+		var num = in.size;	// TODO: if in is not array
+		var accl = Mix.fill(num, {|n|
 			var out = in[n];
 			out = sin(out * 2pi);
 			out = HPZ1.kr(out).abs;

@@ -1,10 +1,16 @@
 s.boot;
 
-~imu = IMUReceiver(1);		// start with 1 sensor
+~imu = IMUReceiver(2);		// Start with 2 sensors
+~mon = KrMonitor.new(0, 20);	// Control bus monitor
 
-~imu.showMsg = true;		// show OSC messages
+/*
+The receiver sends six values (ahrs_x, ahrs_y, ahrs_z, accl_x, accl_y, accl_z) per sensor to the control bus.
+The index of the control bus is a multiple of 6.
+*/
 
-~imu.stop;					// stop the receiver
+~imu.showMsg = true;		// Show OSC messages
+~imu.stop;					// Stop the receiver
+~mon.stop;					// Stop the monitor
 
 
 /** Test sound **/
