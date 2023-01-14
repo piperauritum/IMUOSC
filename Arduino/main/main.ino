@@ -13,14 +13,14 @@ const char ssid[] = "SSID"; // SSID of your access point - router
 const char pass[] = "PIN";  // PIN of your access point - router
 
 // SuperCollider
-char *pc_addr[] = { "192.168.10.100", "192.168.10.101" }; // Static IP of your PC
+char *pc_addr[] = { "192.168.10.100", "192.168.10.101" };  // Static IP of your PC
 const int pc_port = 57120;
 int ipx = 0;
 
 // Static IP of M5Stick
-IPAddress ip(192, 168, 10, 120 + M5ID); // The first three numbers are the same as IP of your PC
-IPAddress gateway(192, 168, 10, 1);     // Default gateway of your PC
-IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
+IPAddress ip(192, 168, 10, 120 + M5ID);  // The first three numbers are the same as IP of your PC
+IPAddress gateway(192, 168, 10, 1);      // Default gateway of your PC
+IPAddress subnet(255, 255, 255, 0);      // Subnet mask of your PC
 
 // IMU data
 float accl[3];
@@ -28,13 +28,12 @@ float gyro[3];
 float ahrs[3];
 
 // stock gyroZ values
-float stockedGyroZs[10];
+float stockedGyroZs[40];
 int stockCnt = 0;
 float adjustGyroZ = 0;
 int stockedGyroZLength = 0;
 
-float battery()
-{
+float battery() {
   float MAX_BATTERY_VOLTAGE = 4.2f;
   float MIN_BATTERY_VOLTAGE = 3.0f;
   float _vbat = M5.Axp.GetBatVoltage();
@@ -42,8 +41,7 @@ float battery()
   return (percent * 100.0f);
 }
 
-void wifi_begin()
-{
+void wifi_begin() {
   WiFi.disconnect(true, true);
   delay(500);
 
@@ -52,9 +50,8 @@ void wifi_begin()
   WiFi.begin(ssid, pass);
 }
 
-void setup()
-{
-  stockedGyroZLength = sizeof(stockedGyroZs) / sizeof(int); // for gyroZ LPF
+void setup() {
+  stockedGyroZLength = sizeof(stockedGyroZs) / sizeof(int);  // for gyroZ LPF
 
   M5.begin();
   setCpuFrequencyMhz(80);
@@ -64,8 +61,7 @@ void setup()
 
   wifi_begin();
 
-  while (WiFi.status() != WL_CONNECTED)
-  {
+  while (WiFi.status() != WL_CONNECTED) {
     M5.Lcd.setCursor(0, 0);
     M5.Lcd.print("Connecting to WiFi");
     delay(1000);
@@ -85,20 +81,17 @@ void setup()
   // M5.IMU.SetAccelFsr(M5.IMU.AFS_4G);
 }
 
-void loop()
-{
+void loop() {
   M5.update();
 
   // Turn off screen after a set amount of time
-  if (millis() > lcd_off)
-  {
+  if (millis() > lcd_off) {
     M5.Axp.ScreenBreath(0);
     M5.Axp.SetLDO2(false);
   }
 
   // Press A to display screen for 3 seconds
-  if (M5.BtnA.isPressed())
-  {
+  if (M5.BtnA.isPressed()) {
     lcd_off = millis() + 3000;
     M5.Axp.ScreenBreath(15);
     M5.Axp.SetLDO2(true);
@@ -109,30 +102,25 @@ void loop()
   }
 
   // Press B to switch pc_addr
-  if (M5.BtnB.wasPressed())
-  {
+  if (M5.BtnB.wasPressed()) {
     ipx = (ipx + 1) % 2;
   }
 
-  // Long press (1s) power switch to power off
-  if (M5.Axp.GetBtnPress() == 0x01)
-  {
+  // Long press (1 sec) power switch to power off
+  if (M5.Axp.GetBtnPress() == 0x01) {
     M5.Axp.PowerOff();
   }
 
   // Check battery level every 10 seconds
-  if (millis() > batt_chk)
-  {
+  if (millis() > batt_chk) {
     // Send OSC when the battery level is low
-    if (M5.Axp.GetWarningLeve() == 1 && low_batt == false)
-    {
+    if (M5.Axp.GetWarningLeve() == 1 && low_batt == false) {
       OscWiFi.send(pc_addr[ipx], pc_port, "/low_batt", M5ID);
       low_batt = true;
     }
 
     // Send OSC every time the battery is 10% down
-    if (battery() < batt_thr)
-    {
+    if (battery() < batt_thr) {
       OscWiFi.send(pc_addr[ipx], pc_port, "/batt_chk", M5ID);
       batt_thr = battery() - 10;
     }
@@ -145,18 +133,14 @@ void loop()
   M5.IMU.getAccelData(&accl[0], &accl[1], &accl[2]);
   // M5.IMU.getAhrsData(&ahrs[0], &ahrs[1], &ahrs[2]); // pitch, roll, yaw
 
-  // Prevent yaw drifting (But not very effective)
-  if (stockCnt < stockedGyroZLength)
-  {
+  // Prevent yaw drifting
+  // Keep it stationary until gyroZs are stocked (2 sec) after power-on.
+  if (stockCnt < stockedGyroZLength) {
     stockedGyroZs[stockCnt] = gyro[2];
     stockCnt++;
-  }
-  else
-  {
-    if (adjustGyroZ == 0)
-    {
-      for (int i = 0; i < stockedGyroZLength; i++)
-      {
+  } else {
+    if (adjustGyroZ == 0) {
+      for (int i = 0; i < stockedGyroZLength; i++) {
         adjustGyroZ += stockedGyroZs[i] / stockedGyroZLength;
       }
     }
