@@ -1,4 +1,4 @@
-# IMUOSC for Arduino IDE
+# IMUOSC (for Arduino IDE)
 
 [![](https://img.youtube.com/vi/TP_IzwO8O2c/0.jpg)](https://www.youtube.com/watch?v=TP_IzwO8O2c)
 
