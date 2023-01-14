@@ -5,7 +5,7 @@
 ## Overview
 A Program to control SuperCollider using IMU data from M5StickC Plus.
 <br>
-The battery duration of M5StickC Plus with this sketch is approx. 1 hour.
+The battery duration of the device with this sketch is approx. 1 hour.
 <br>
 Note that the device is turned on as soon as it is connected to a USB power source.
 <br>
