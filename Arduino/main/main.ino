@@ -75,6 +75,7 @@ void setup() {
     delay(1000);
   }
 
+  M5.Lcd.fillScreen(BLACK);
   M5.Lcd.setCursor(0, 0);
   M5.Lcd.print(WiFi.localIP());
   M5.Lcd.print("    ");
