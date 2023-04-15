@@ -9,11 +9,11 @@ float batt_thr;
 bool low_batt = false;
 
 // Wifi
-const char ssid[] = "SSID"; // SSID of your access point - router
-const char pass[] = "PIN";  // PIN of your access point - router
+const char ssid[] = "SSID";  // SSID of your access point - router
+const char pass[] = "PIN";   // PIN of your access point - router
 
 // SuperCollider
-char *pc_addr[] = { "192.168.10.100", "192.168.10.101" };  // Static IP of your PC
+char *pc_addr[] = { "192.168.10.101", "192.168.10.100" };  // Static IP of your PC
 const int pc_port = 57120;
 int ipx = 0;
 
@@ -64,6 +64,14 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED) {
     M5.Lcd.setCursor(0, 0);
     M5.Lcd.print("Connecting to WiFi");
+    M5.Lcd.setCursor(0, 48);
+    M5.Lcd.print(ssid);
+    M5.Lcd.setCursor(0, 96);
+    M5.Lcd.printf("BATT %3.1f", battery());
+    M5.Lcd.print("% ");
+    if (M5.Axp.GetBtnPress() == 0x01) {
+      M5.Axp.PowerOff();
+    }
     delay(1000);
   }
 
