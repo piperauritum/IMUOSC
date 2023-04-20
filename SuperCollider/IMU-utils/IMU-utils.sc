@@ -130,4 +130,18 @@ MixHPZ {
 		});
 		^accl;
 	}
+
+	*kr {|in|
+		var accl, num;
+		if (in.isArray == false) { in = [in] };
+		num = in.size;
+		accl = Mix.fill(num, {|n|
+			var out = in[n];
+			out = sin(out * 2pi);
+			out = HPZ1.kr(out).abs;
+			Lag2.kr(out, 0.05);
+		});
+		^accl;
+	}
+
 }
