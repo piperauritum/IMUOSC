@@ -62,6 +62,7 @@ IPAddress subnet(255, 255, 255, 0);     // Subnet mask of your PC
 - Upload it to M5StickC Plus
 
 ## Setup SuperCollider
+- 'Windows Defender Firewall' > 'Allow an app or feature through Windows Defender Firewall' > Add 'scide.exe', 'sclang.exe' and 'scsynth.exe' and check 'Private' (For Windows)
 - Place '[SuperCollider](https://github.com/piperauritum/IMUOSC/tree/main/SuperCollider)/IMU-utils' folder into Platform.userExtensionDir or Platform.systemExtensionDir
 
 ## Receive the data with SuperCollider
